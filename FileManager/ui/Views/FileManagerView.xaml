@@ -1,0 +1,81 @@
+﻿<Window x:Class="FileManager.FileManagerView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FileManager"
+        xmlns:viewModels="clr-namespace:FileManager.ui.ViewModels"
+        d:DataContext="{d:DesignInstance Type=viewModels:FileManagerViewModel}"
+        mc:Ignorable="d"
+        Title="FileManager" Height="700" Width="1000"
+        FontSize="16">
+    <Grid Margin="10">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="8*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <!-- File Managers-->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <!-- Left File Manager-->
+                <ListBox Grid.Column="0" ItemsSource="{Binding LeftFileManagerContents}" SelectionMode="Single"
+                         SelectedItem="{Binding SelectedFileViewModel}" Margin="0 0 5 0">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewModels:FileManagerItemViewModel}">
+                            <TextBlock Text="{Binding FileName}">
+                                <TextBlock.InputBindings>
+                                    <MouseBinding
+                                        MouseAction="LeftDoubleClick"
+                                        Command="{Binding DataContext.SendRequestCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" />
+                                </TextBlock.InputBindings>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <!-- Right File Manager-->
+                <ListBox Grid.Column="1" ItemsSource="{Binding RightFileManagerContents}" SelectionMode="Single"
+                         SelectedItem="{Binding SelectedFileViewModel}" Margin="5 0 0 0 ">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewModels:FileManagerItemViewModel}">
+                            <TextBlock Text="{Binding FileName}">
+                                <TextBlock.InputBindings>
+                                    <MouseBinding
+                                        MouseAction="LeftDoubleClick"
+                                        Command="{Binding DataContext.SendRequestCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" />
+                                </TextBlock.InputBindings>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+
+            <!--PathTextBox-->
+            <TextBox Grid.Row="1" Margin="0 10 0 0" VerticalContentAlignment="Center" Text="{Binding CurrentPath}" />
+
+            <Grid Grid.Row="2" Margin="0 10 0 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Command="{Binding}" Content="Help(F1)" />
+                <Button Grid.Column="1" Margin="10 0 0 0" Command="{Binding}" Content="Copy(F5)" />
+                <Button Grid.Column="2" Margin="10 0 0 0" Command="{Binding}" Content="RenMove(F6)" />
+                <Button Grid.Column="3" Margin="10 0 0 0" Command="{Binding}" Content="MkFold(F7)" />
+                <Button Grid.Column="4" Margin="10 0 0 0" Command="{Binding}" Content="Delete(F8)" />
+                <Button Grid.Column="5" Margin="10 0 0 0" Command="{Binding}" Content="Quit(F10)" />
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
