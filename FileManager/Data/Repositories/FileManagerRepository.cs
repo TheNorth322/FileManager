@@ -34,7 +34,7 @@ public class FileManagerRepository : IFileManagerRepository
 
     public void RemoveFile(string path)
     {
-        _fileManager.RemoveFile(path);
+        _fileManager.Remove(path);
     }
 
     public void RemoveDirectoryContents(string path)
@@ -66,4 +66,9 @@ public class FileManagerRepository : IFileManagerRepository
     public string GetGroups() => _fileManager.GetGroups();
 
     public string GetUsers() => _fileManager.GetUsers();
+
+    public void OpenFile(string path)
+    {
+        _fileManager.OpenFile(path); 
+    }
 }

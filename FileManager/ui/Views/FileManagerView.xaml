@@ -1,15 +1,43 @@
-﻿<Window x:Class="FileManager.FileManagerView"
+﻿<Window x:Class="FileManager.ui.Views.FileManagerView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileManager"
         xmlns:viewModels="clr-namespace:FileManager.ui.ViewModels"
+        xmlns:views="clr-namespace:FileManager.ui.Views"
+        xmlns:custom="clr-namespace:ModalControl;assembly=ModalControl"
         d:DataContext="{d:DesignInstance Type=viewModels:FileManagerViewModel}"
         mc:Ignorable="d"
         Title="FileManager" Height="700" Width="1000"
         FontSize="16">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewModels:HelpViewModel}">
+            <views:HelpModalView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:CopyViewModel}">
+            <views:CopyModalView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:MoveViewModel}">
+            <views:MoveModalView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:MakeFolderViewModel}">
+            <views:MakeFolderModalView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:DeleteViewModel}">
+            <views:DeleteModalView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:QuitViewModel}">
+            <views:QuitModalView />
+        </DataTemplate>
+    </Window.Resources>
     <Grid Margin="10">
+        <custom:Modal Panel.ZIndex="10" x:Name="modal" Content="{Binding CurrentModalViewModel}">
+            <custom:Modal.Background>
+                <SolidColorBrush Color="Black" Opacity="0.3" />
+            </custom:Modal.Background>
+        </custom:Modal>
+
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="8*" />
@@ -32,7 +60,7 @@
                                 <TextBlock.InputBindings>
                                     <MouseBinding
                                         MouseAction="LeftDoubleClick"
-                                        Command="{Binding DataContext.SendRequestCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" />
+                                        Command="{Binding DataContext.FileClickCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" />
                                 </TextBlock.InputBindings>
                             </TextBlock>
                         </DataTemplate>
@@ -48,7 +76,7 @@
                                 <TextBlock.InputBindings>
                                     <MouseBinding
                                         MouseAction="LeftDoubleClick"
-                                        Command="{Binding DataContext.SendRequestCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" />
+                                        Command="{Binding DataContext.FileClickCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" />
                                 </TextBlock.InputBindings>
                             </TextBlock>
                         </DataTemplate>
@@ -69,12 +97,12 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Command="{Binding}" Content="Help(F1)" />
-                <Button Grid.Column="1" Margin="10 0 0 0" Command="{Binding}" Content="Copy(F5)" />
-                <Button Grid.Column="2" Margin="10 0 0 0" Command="{Binding}" Content="RenMove(F6)" />
-                <Button Grid.Column="3" Margin="10 0 0 0" Command="{Binding}" Content="MkFold(F7)" />
-                <Button Grid.Column="4" Margin="10 0 0 0" Command="{Binding}" Content="Delete(F8)" />
-                <Button Grid.Column="5" Margin="10 0 0 0" Command="{Binding}" Content="Quit(F10)" />
+                <Button Grid.Column="0" Command="{Binding ShowHelpModalCommand}" Content="Help" />
+                <Button Grid.Column="1" Margin="10 0 0 0" Command="{Binding ShowCopyModalCommand}" Content="Copy" />
+                <Button Grid.Column="2" Margin="10 0 0 0" Command="{Binding ShowMoveModalCommand}" Content="RenMove" />
+                <Button Grid.Column="3" Margin="10 0 0 0" Command="{Binding ShowMakeFolderModalCommand}" Content="MkFold" />
+                <Button Grid.Column="4" Margin="10 0 0 0" Command="{Binding ShowDeleteModalCommand}" Content="Delete" />
+                <Button Grid.Column="5" Margin="10 0 0 0" Command="{Binding ShowQuitModalCommand}" Content="Quit" />
             </Grid>
         </Grid>
     </Grid>

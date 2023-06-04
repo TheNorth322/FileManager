@@ -25,7 +25,13 @@ public class ViewModelBase : INotifyPropertyChanged
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
+    
+    public void OnCloseModal()
+    {
+        OnCloseModalAction?.Invoke();              
+    }
 
+    public Action OnCloseModalAction { get; set; }
     protected void Dispose()
     {
     }

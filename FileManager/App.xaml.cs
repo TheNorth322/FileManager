@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using FileManager.ui.ViewModels;
+using FileManager.ui.Views;
 
 namespace FileManager
 {
@@ -16,9 +17,16 @@ namespace FileManager
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            MainWindow = new FileManagerView(new FileManagerViewModel());
+            FileManagerViewModel vm = new FileManagerViewModel();
+            vm.ExitApplicationEvent += ExitApplication;
+            MainWindow = new FileManagerView(vm);
             MainWindow.Show();
             base.OnStartup(e);
+        }
+
+        private void ExitApplication()
+        {
+            Application.Current.Shutdown(); 
         }
     }
 }

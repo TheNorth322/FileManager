@@ -14,11 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using FileManager.ui.ViewModels;
 
-namespace FileManager
+namespace FileManager.ui.Views
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class FileManagerView : Window
     {
         public FileManagerView()
@@ -29,6 +26,18 @@ namespace FileManager
         public FileManagerView(FileManagerViewModel vm) : this()
         {
             this.DataContext = vm;
+            (this.DataContext as FileManagerViewModel).OpenModal += OnOpenModal;
+            (this.DataContext as FileManagerViewModel).CloseModal += OnCloseModal;
+        }
+
+        private void OnOpenModal()
+        {
+            modal.IsOpen = true;
+        }
+
+        private void OnCloseModal()
+        {
+            modal.IsOpen = false;
         }
     }
 }

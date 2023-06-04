@@ -68,4 +68,9 @@ public class FileManagerInteractor
     {
         return Directory.GetLogicalDrives();
     }
+
+    public void OpenFile(string path)
+    {
+        _fileManagerRepository.OpenFile(path);
+    }
 }

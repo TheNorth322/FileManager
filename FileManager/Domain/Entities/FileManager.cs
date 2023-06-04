@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using FileManager.Model.Interfaces;
-using Microsoft.VisualBasic;
 
 namespace FileManager.Domain.Entities;
 
@@ -30,16 +30,19 @@ public class FileManager : IFileManager
             directoryContets[i] = directoryInfos[i];
 
         for (; i < fileInfos.Length + directoryInfos.Length; i++)
-            directoryContets[i] = fileInfos[i - fileInfos.Length + 1];
+            directoryContets[i] = fileInfos[i - directoryInfos.Length];
 
         return directoryContets;
     }
 
-    public void RemoveFile(string path)
+    public void Remove(string path)
     {
-        CheckFileExist(path);
-
-        File.Delete(path);
+        if (File.Exists(path))
+            File.Delete(path);
+        else if (Directory.Exists(path))
+            RemoveDirectoryContents(path); 
+        else
+            throw new ArgumentException(nameof(path));
     }
 
     public void RemoveDirectoryContents(string path)
@@ -113,5 +116,10 @@ public class FileManager : IFileManager
     {
         if (!Directory.Exists(path))
             throw new DirectoryNotFoundException(nameof(path));
+    }
+
+    public void OpenFile(string path)
+    {
+        Process.Start(path);
     }
 }

@@ -1,0 +1,39 @@
+﻿<UserControl x:Class="FileManager.ui.Views.DeleteModalView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:FileManager.ui.Views"
+             xmlns:viewModels="clr-namespace:FileManager.ui.ViewModels"
+             d:DataContext="{d:DesignInstance Type=viewModels:DeleteViewModel}"
+             mc:Ignorable="d"
+             d:DesignHeight="400" d:DesignWidth="400">
+    <Grid Width="400" Height="400" Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="6*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Button Grid.Row="0" Content="X" Margin="20" VerticalAlignment="Top" HorizontalAlignment="Right" Padding="10 5"
+                Command="{Binding CloseModalCommand}" />
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/> 
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="Are you want to delete this file?" HorizontalAlignment="Center"
+                       VerticalAlignment="Center" FontSize="20" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="1" Text="{Binding CurrentPath}" TextWrapping="Wrap" FontSize="18"
+                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button Content="Yes" Command="{Binding DeleteFileCommand}" />
+            <Button Grid.Column="1" Content="No" Command="{Binding CloseModalCommand}" Margin="10 0 0 0" />
+        </Grid>
+    </Grid>
+</UserControl>

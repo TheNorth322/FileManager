@@ -17,4 +17,6 @@ public interface IFileManagerRepository
 
     string GetGroups();
     string GetUsers();
+    
+    void OpenFile(string path);
 }
