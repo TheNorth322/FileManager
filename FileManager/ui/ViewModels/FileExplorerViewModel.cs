@@ -22,7 +22,7 @@ public class FileExplorerViewModel : ViewModelBase
         _fileManagerInteractor =
             fileManagerInteractor ?? throw new ArgumentNullException(nameof(fileManagerInteractor));
         _fileManagerContents = new ObservableCollection<FileManagerItemViewModel>();
-        GetDisks();        
+        GetDisks();
     }
 
     public ObservableCollection<FileManagerItemViewModel> FileManagerContents
@@ -41,6 +41,7 @@ public class FileExplorerViewModel : ViewModelBase
         set
         {
             _currentPath = value;
+            _absolutePath = DeleteLastName(_currentPath);
             OnPropertyChange(nameof(_currentPath));
             CurrentPathChanged?.Invoke(this, System.EventArgs.Empty);
         }
@@ -52,8 +53,8 @@ public class FileExplorerViewModel : ViewModelBase
         set
         {
             _selectedFileViewModel = value;
-            CurrentPath = value.FullPath;
-
+            CurrentPath = _selectedFileViewModel.FullPath;
+            _absolutePath = DeleteLastName(CurrentPath);
             OnPropertyChange(nameof(SelectedFileViewModel));
         }
     }
@@ -75,12 +76,13 @@ public class FileExplorerViewModel : ViewModelBase
     {
         if (SelectedFileViewModel.FileName == _goBack)
         {
-            if (_absolutePath.Length == 3)
+            if (CurrentPath.Length == 3)
             {
                 GetDisks();
                 return;
             }
 
+            CurrentPath = DeleteLastName(CurrentPath);
             UpdateFileManagerContents(CurrentPath);
             return;
         }
@@ -95,9 +97,14 @@ public class FileExplorerViewModel : ViewModelBase
 
     public void UpdateFileManagerContents(string path)
     {
-        FileManagerContents =
-            Parse(_fileManagerInteractor.GetDirectoryContents(path));
-        _absolutePath = CurrentPath;
+        if (String.IsNullOrEmpty(path))
+        {
+            GetDisks();
+        }
+        else
+        {
+            FileManagerContents = Parse(_fileManagerInteractor.GetDirectoryContents(path));
+        }
     }
 
     private ObservableCollection<FileManagerItemViewModel> Parse(string[] strings)
@@ -116,12 +123,23 @@ public class FileExplorerViewModel : ViewModelBase
     private void GetDisks()
     {
         string[] disks = _fileManagerInteractor.GetDisks();
-        
+
         _absolutePath = "";
         _fileManagerContents.Clear();
-        
+
         foreach (string disk in disks)
             _fileManagerContents.Add(new FileManagerItemViewModel(disk, disk));
+    }
+
+    private string DeleteLastName(string path)
+    {
+        for (int i = path.Length - 1; i >= 0; i--)
+        {
+            if (path[i] == '\\')
+                return path.Substring(0, (i == 2) ? ++i : i);
+        }
+
+        return path;
     }
 
     public EventHandler CurrentPathChanged { get; set; }

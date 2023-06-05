@@ -14,13 +14,14 @@ public class FileManagerViewModel : ViewModelBase
 {
     private FileExplorerViewModel _leftExplorerViewModel;
     private FileExplorerViewModel _rightExplorerViewModel;
-    
+    private string[] _disks;
+
     private readonly FileManagerInteractor _fileManagerInteractor;
-    
+
     private string _currentPath;
     private string _absolutePath = "";
     private ViewModelBase _currentModalViewModel;
-    
+
     private RelayCommand _showHelpModalCommand;
     private RelayCommand _showCopyModalCommand;
     private RelayCommand _showMoveModalCommand;
@@ -33,6 +34,11 @@ public class FileManagerViewModel : ViewModelBase
         _fileManagerInteractor = new FileManagerInteractor(FileManagerRepository.GetInstance());
         _leftExplorerViewModel = new FileExplorerViewModel(_fileManagerInteractor);
         _rightExplorerViewModel = new FileExplorerViewModel(_fileManagerInteractor);
+
+        _leftExplorerViewModel.CurrentPathChanged += OnCurrentPathChanged;
+        _rightExplorerViewModel.CurrentPathChanged += OnCurrentPathChanged;
+        _disks = _fileManagerInteractor.GetDisks();
+        _absolutePath = _disks[0];
     }
 
     public FileExplorerViewModel LeftExplorerViewModel
@@ -54,6 +60,7 @@ public class FileManagerViewModel : ViewModelBase
             OnPropertyChange(nameof(RightExplorerViewModel));
         }
     }
+
     public ViewModelBase CurrentModalViewModel
     {
         get { return _currentModalViewModel; }
@@ -64,15 +71,18 @@ public class FileManagerViewModel : ViewModelBase
 
             if (_currentModalViewModel.GetType() == typeof(QuitViewModel))
                 (_currentModalViewModel as QuitViewModel).ExitApplicationEvent += ExitApplication;
-            
+
             if (_currentModalViewModel.GetType() == typeof(DeleteViewModel))
-                (_currentModalViewModel as DeleteViewModel).ExplorerContentChanged += OnFileManagerContentChanged;  
+                (_currentModalViewModel as DeleteViewModel).ExplorerContentChanged += OnFileManagerContentChanged;
 
             if (_currentModalViewModel.GetType() == typeof(MakeFolderViewModel))
                 (_currentModalViewModel as MakeFolderViewModel).ExplorerContentChanged += OnFileManagerContentChanged;
 
             if (_currentModalViewModel.GetType() == typeof(MoveViewModel))
                 (_currentModalViewModel as MoveViewModel).ExplorerContentChanged += OnFileManagerContentChanged;
+            
+            if (_currentModalViewModel.GetType() == typeof(CopyViewModel))
+                (_currentModalViewModel as CopyViewModel).ExplorerContentChanged += OnFileManagerContentChanged;
             
             OnPropertyChange(nameof(CurrentModalViewModel));
         }
@@ -85,10 +95,11 @@ public class FileManagerViewModel : ViewModelBase
         set
         {
             _currentPath = value;
+            _absolutePath = CurrentPath;
             OnPropertyChange(nameof(CurrentPath));
         }
     }
-    
+
     public RelayCommand ShowHelpModalCommand
     {
         get
@@ -106,7 +117,7 @@ public class FileManagerViewModel : ViewModelBase
         {
             return _showCopyModalCommand ?? new RelayCommand(
                 _execute => ShowCopyModal(),
-                _canExecute => (!String.IsNullOrEmpty(_absolutePath))
+                _canExecute => !_disks.Contains(_absolutePath)
             );
         }
     }
@@ -117,7 +128,7 @@ public class FileManagerViewModel : ViewModelBase
         {
             return _showMoveModalCommand ?? new RelayCommand(
                 _execute => ShowMoveModal(),
-                _canExecute => (!String.IsNullOrEmpty(_absolutePath))
+                _canExecute => !_disks.Contains(_absolutePath)
             );
         }
     }
@@ -128,7 +139,7 @@ public class FileManagerViewModel : ViewModelBase
         {
             return _showMakeFolderModalCommand ?? new RelayCommand(
                 _execute => ShowMakeFolderModal(),
-                _canExecute => (!String.IsNullOrEmpty(_absolutePath))
+                _canExecute => !_disks.Contains(_absolutePath)
             );
         }
     }
@@ -139,7 +150,7 @@ public class FileManagerViewModel : ViewModelBase
         {
             return _showDeleteModalCommand ?? new RelayCommand(
                 _execute => ShowDeleteModal(),
-                _canExecute => (!String.IsNullOrEmpty(_absolutePath))
+                _canExecute => !_disks.Contains(_absolutePath)
             );
         }
     }
@@ -191,6 +202,23 @@ public class FileManagerViewModel : ViewModelBase
         OpenModal?.Invoke();
     }
 
+    private void OnCloseModalFunc()
+    {
+        CloseModal?.Invoke();
+    }
+
+    private void ExitApplication()
+    {
+        ExitApplicationEvent?.Invoke();
+    }
+
+    // TODO
+    private void OnFileManagerContentChanged()
+    {
+        _leftExplorerViewModel.UpdateFileManagerContents(DeleteLastName(_leftExplorerViewModel.CurrentPath));
+        _rightExplorerViewModel.UpdateFileManagerContents(DeleteLastName(_rightExplorerViewModel.CurrentPath));
+    }
+
     private string DeleteLastName(string path)
     {
         for (int i = path.Length - 1; i >= 0; i--)
@@ -202,26 +230,11 @@ public class FileManagerViewModel : ViewModelBase
         return path;
     }
 
-    private void OnCloseModalFunc()
-    {
-        CloseModal?.Invoke();
-    }
-
-    private void ExitApplication()
-    {
-        ExitApplicationEvent?.Invoke();
-    }
-    
-    // TODO
-    private void OnFileManagerContentChanged() {
-        _leftExplorerViewModel.UpdateFileManagerContents(_leftExplorerViewModel._absolutePath);
-        _rightExplorerViewModel.UpdateFileManagerContents(_rightExplorerViewModel._absolutePath);
-    }
-
     public void OnCurrentPathChanged(object sender, System.EventArgs e)
     {
         CurrentPath = (sender as FileExplorerViewModel).CurrentPath;
     }
+
     public Action OpenModal { get; set; }
     public Action CloseModal { get; set; }
     public Action ExitApplicationEvent { get; set; }
