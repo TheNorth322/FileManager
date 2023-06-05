@@ -7,11 +7,15 @@
         xmlns:viewModels="clr-namespace:FileManager.ui.ViewModels"
         xmlns:views="clr-namespace:FileManager.ui.Views"
         xmlns:custom="clr-namespace:ModalControl;assembly=ModalControl"
+        xmlns:components="clr-namespace:FileManager.ui.Components"
         d:DataContext="{d:DesignInstance Type=viewModels:FileManagerViewModel}"
         mc:Ignorable="d"
         Title="FileManager" Height="700" Width="1000"
         FontSize="16">
     <Window.Resources>
+        <DataTemplate DataType="{x:Type viewModels:FileExplorerViewModel}">
+            <components:FileExplorer />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:HelpViewModel}">
             <views:HelpModalView />
         </DataTemplate>
@@ -52,36 +56,9 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Left File Manager-->
-                <ListBox Grid.Column="0" ItemsSource="{Binding LeftFileManagerContents}" SelectionMode="Single"
-                         SelectedItem="{Binding SelectedFileViewModel}" Margin="0 0 5 0">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type viewModels:FileManagerItemViewModel}">
-                            <TextBlock Text="{Binding FileName}">
-                                <TextBlock.InputBindings>
-                                    <MouseBinding
-                                        MouseAction="LeftDoubleClick"
-                                        Command="{Binding DataContext.FileClickCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" />
-                                </TextBlock.InputBindings>
-                            </TextBlock>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-
+                <components:FileExplorer Content="{Binding LeftExplorerViewModel}" />
                 <!-- Right File Manager-->
-                <ListBox Grid.Column="1" ItemsSource="{Binding RightFileManagerContents}" SelectionMode="Single"
-                         SelectedItem="{Binding SelectedFileViewModel}" Margin="5 0 0 0 ">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type viewModels:FileManagerItemViewModel}">
-                            <TextBlock Text="{Binding FileName}">
-                                <TextBlock.InputBindings>
-                                    <MouseBinding
-                                        MouseAction="LeftDoubleClick"
-                                        Command="{Binding DataContext.FileClickCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" />
-                                </TextBlock.InputBindings>
-                            </TextBlock>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                <components:FileExplorer Grid.Column="1" Content="{Binding RightExplorerViewModel}" />
             </Grid>
 
             <!--PathTextBox-->
@@ -100,7 +77,8 @@
                 <Button Grid.Column="0" Command="{Binding ShowHelpModalCommand}" Content="Help" />
                 <Button Grid.Column="1" Margin="10 0 0 0" Command="{Binding ShowCopyModalCommand}" Content="Copy" />
                 <Button Grid.Column="2" Margin="10 0 0 0" Command="{Binding ShowMoveModalCommand}" Content="RenMove" />
-                <Button Grid.Column="3" Margin="10 0 0 0" Command="{Binding ShowMakeFolderModalCommand}" Content="MkFold" />
+                <Button Grid.Column="3" Margin="10 0 0 0" Command="{Binding ShowMakeFolderModalCommand}"
+                        Content="MkFold" />
                 <Button Grid.Column="4" Margin="10 0 0 0" Command="{Binding ShowDeleteModalCommand}" Content="Delete" />
                 <Button Grid.Column="5" Margin="10 0 0 0" Command="{Binding ShowQuitModalCommand}" Content="Quit" />
             </Grid>

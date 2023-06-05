@@ -7,9 +7,8 @@ public class FileManagerItemViewModel : ViewModelBase
 {
     public string FileName { get; }
     public string FullPath { get; }
-    public FileManagerPosition FileManagerPosition { get; }
     
-    public FileManagerItemViewModel(string fileName, string fullPath, FileManagerPosition fileManagerPosition)
+    public FileManagerItemViewModel(string fileName, string fullPath)
     {
         if (String.IsNullOrEmpty(fileName))
             throw new ArgumentException(nameof(fileName));
@@ -18,6 +17,5 @@ public class FileManagerItemViewModel : ViewModelBase
         
         FileName = fileName;
         FullPath = fullPath;
-        FileManagerPosition = fileManagerPosition;
     }
 }

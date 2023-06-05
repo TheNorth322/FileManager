@@ -12,14 +12,15 @@ namespace FileManager.ui.ViewModels;
 
 public class FileManagerViewModel : ViewModelBase
 {
-    private ObservableCollection<FileManagerItemViewModel> _leftFileManagerContents;
-    private ObservableCollection<FileManagerItemViewModel> _rightFileManagerContents;
-    private FileManagerItemViewModel _selectedFileViewModel;
+    private FileExplorerViewModel _leftExplorerViewModel;
+    private FileExplorerViewModel _rightExplorerViewModel;
+    
     private readonly FileManagerInteractor _fileManagerInteractor;
+    
     private string _currentPath;
     private string _absolutePath = "";
-    private const string _goBack = "..";
     private ViewModelBase _currentModalViewModel;
+    
     private RelayCommand _showHelpModalCommand;
     private RelayCommand _showCopyModalCommand;
     private RelayCommand _showMoveModalCommand;
@@ -30,10 +31,29 @@ public class FileManagerViewModel : ViewModelBase
     public FileManagerViewModel()
     {
         _fileManagerInteractor = new FileManagerInteractor(FileManagerRepository.GetInstance());
-        _leftFileManagerContents = GetDisks(FileManagerPosition.Left);
-        _rightFileManagerContents = GetDisks(FileManagerPosition.Right);
+        _leftExplorerViewModel = new FileExplorerViewModel(_fileManagerInteractor);
+        _rightExplorerViewModel = new FileExplorerViewModel(_fileManagerInteractor);
     }
 
+    public FileExplorerViewModel LeftExplorerViewModel
+    {
+        get { return _leftExplorerViewModel; }
+        set
+        {
+            _leftExplorerViewModel = value;
+            OnPropertyChange(nameof(LeftExplorerViewModel));
+        }
+    }
+
+    public FileExplorerViewModel RightExplorerViewModel
+    {
+        get { return _rightExplorerViewModel; }
+        set
+        {
+            _rightExplorerViewModel = value;
+            OnPropertyChange(nameof(RightExplorerViewModel));
+        }
+    }
     public ViewModelBase CurrentModalViewModel
     {
         get { return _currentModalViewModel; }
@@ -58,15 +78,6 @@ public class FileManagerViewModel : ViewModelBase
         }
     }
 
-    public ObservableCollection<FileManagerItemViewModel> LeftFileManagerContents
-    {
-        get { return _leftFileManagerContents; }
-        set
-        {
-            _leftFileManagerContents = value;
-            OnPropertyChange(nameof(LeftFileManagerContents));
-        }
-    }
 
     public string CurrentPath
     {
@@ -77,56 +88,7 @@ public class FileManagerViewModel : ViewModelBase
             OnPropertyChange(nameof(CurrentPath));
         }
     }
-
-    public ObservableCollection<FileManagerItemViewModel> RightFileManagerContents
-    {
-        get { return _rightFileManagerContents; }
-        set
-        {
-            _rightFileManagerContents = value;
-            OnPropertyChange(nameof(RightFileManagerContents));
-        }
-    }
-
-    private RelayCommand _fileManagerItemClick;
-
-    public RelayCommand FileManagerItemClick
-    {
-        get
-        {
-            return _fileClickCommand ?? new RelayCommand(
-                _execute => ParseClick(),
-                _canExecute => true
-            );
-        }
-    }
-
-    public FileManagerItemViewModel SelectedFileViewModel
-    {
-        get { return _selectedFileViewModel; }
-        set
-        {
-            _selectedFileViewModel = value;
-            CurrentPath = value.FullPath; 
-
-            OnPropertyChange(nameof(SelectedFileViewModel));
-        }
-    }
-
-    private RelayCommand _fileClickCommand;
-
-    public RelayCommand FileClickCommand
-    {
-        get
-        {
-            return _fileClickCommand ?? new RelayCommand(
-                _execute => ParseClick(),
-                _canExecute => true
-            );
-        }
-    }
-
-
+    
     public RelayCommand ShowHelpModalCommand
     {
         get
@@ -229,46 +191,6 @@ public class FileManagerViewModel : ViewModelBase
         OpenModal?.Invoke();
     }
 
-    private ObservableCollection<FileManagerItemViewModel> GetDisks(FileManagerPosition position)
-    {
-        ObservableCollection<FileManagerItemViewModel>
-            collection = new ObservableCollection<FileManagerItemViewModel>();
-        string[] disks = _fileManagerInteractor.GetDisks();
-
-        foreach (string disk in disks)
-            collection.Add(new FileManagerItemViewModel(disk, disk, position));
-
-        return collection;
-    }
-
-    private void ParseClick()
-    {
-        _absolutePath = CurrentPath;
-        if (SelectedFileViewModel.FileName == _goBack)
-        {
-            CurrentPath = DeleteLastName(SelectedFileViewModel.FullPath);
-            if (CurrentPath.Length == 3)
-            {
-                if (SelectedFileViewModel.FileManagerPosition == FileManagerPosition.Left)
-                    LeftFileManagerContents = GetDisks(FileManagerPosition.Left);
-                else
-                    RightFileManagerContents = GetDisks(FileManagerPosition.Right);
-                _absolutePath = "";
-                return;
-            }
-
-            UpdateFileManagerContents(SelectedFileViewModel.FileManagerPosition, CurrentPath);
-            return;
-        }
-
-        FileAttributes attr = File.GetAttributes(SelectedFileViewModel.FullPath);
-
-        if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
-            UpdateFileManagerContents(SelectedFileViewModel.FileManagerPosition, CurrentPath);
-        else
-            _fileManagerInteractor.OpenFile(SelectedFileViewModel.FullPath);
-    }
-
     private string DeleteLastName(string path)
     {
         for (int i = path.Length - 1; i >= 0; i--)
@@ -278,30 +200,6 @@ public class FileManagerViewModel : ViewModelBase
         }
 
         return path;
-    }
-
-    private void UpdateFileManagerContents(FileManagerPosition fileManagerPosition, string path)
-    {
-        if (fileManagerPosition == FileManagerPosition.Left)
-            LeftFileManagerContents =
-                Parse(_fileManagerInteractor.GetDirectoryContents(path), fileManagerPosition);
-        else
-            RightFileManagerContents =
-                Parse(_fileManagerInteractor.GetDirectoryContents(path), fileManagerPosition);
-    }
-
-    private ObservableCollection<FileManagerItemViewModel> Parse(string[] strings,
-        FileManagerPosition fileManagerPosition)
-    {
-        ObservableCollection<FileManagerItemViewModel>
-            collection = new ObservableCollection<FileManagerItemViewModel>();
-
-        collection.Add(new FileManagerItemViewModel(_goBack, CurrentPath, fileManagerPosition));
-
-        foreach (string str in strings)
-            collection.Add(new FileManagerItemViewModel(str.Split("\\").Last(), str, fileManagerPosition));
-
-        return collection;
     }
 
     private void OnCloseModalFunc()
@@ -314,10 +212,16 @@ public class FileManagerViewModel : ViewModelBase
         ExitApplicationEvent?.Invoke();
     }
     
+    // TODO
     private void OnFileManagerContentChanged() {
-        UpdateFileManagerContents(SelectedFileViewModel.FileManagerPosition, _absolutePath);
+        _leftExplorerViewModel.UpdateFileManagerContents(_leftExplorerViewModel._absolutePath);
+        _rightExplorerViewModel.UpdateFileManagerContents(_rightExplorerViewModel._absolutePath);
     }
-    
+
+    public void OnCurrentPathChanged(object sender, System.EventArgs e)
+    {
+        CurrentPath = (sender as FileExplorerViewModel).CurrentPath;
+    }
     public Action OpenModal { get; set; }
     public Action CloseModal { get; set; }
     public Action ExitApplicationEvent { get; set; }
