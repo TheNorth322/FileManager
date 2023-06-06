@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace FileManager.ui.Commands;
+namespace BetterMVVM;
 
 public class RelayCommand : ICommand
 {

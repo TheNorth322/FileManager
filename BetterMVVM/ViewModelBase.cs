@@ -1,9 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows;
-using FileManager.ui.EventArgs;
 
-namespace FileManager.ui.ViewModels;
+namespace BetterMVVM;
 
 public class ViewModelBase : INotifyPropertyChanged
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace FileManager.ui.EventArgs;
+namespace BetterMVVM;
 
 public class MessageBoxEventArgs
 {

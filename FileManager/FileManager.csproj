@@ -16,7 +16,15 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\BetterMVVM\BetterMVVM.csproj" />
+      <ProjectReference Include="..\FileManagerDLL\FileManagerDLL.csproj" />
       <ProjectReference Include="..\ModalControl\ModalControl.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Domain\Entities" />
+      <Folder Include="ui\Commands" />
+      <Folder Include="ui\EventArgs" />
     </ItemGroup>
 
 </Project>

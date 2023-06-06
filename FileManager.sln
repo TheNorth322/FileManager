@@ -4,6 +4,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileManager", "FileManager\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModalControl", "ModalControl\ModalControl.csproj", "{03D470EC-0F3E-40A1-893C-AC4174971CEB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileManagerDLL", "FileManagerDLL\FileManagerDLL.csproj", "{7BFDCD34-72CA-4B95-8932-2A06EF37AB8C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterMVVM", "BetterMVVM\BetterMVVM.csproj", "{66C76964-5150-4656-92CD-A739865E0FEA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,13 @@ Global
 		{03D470EC-0F3E-40A1-893C-AC4174971CEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03D470EC-0F3E-40A1-893C-AC4174971CEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03D470EC-0F3E-40A1-893C-AC4174971CEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BFDCD34-72CA-4B95-8932-2A06EF37AB8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BFDCD34-72CA-4B95-8932-2A06EF37AB8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BFDCD34-72CA-4B95-8932-2A06EF37AB8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BFDCD34-72CA-4B95-8932-2A06EF37AB8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66C76964-5150-4656-92CD-A739865E0FEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66C76964-5150-4656-92CD-A739865E0FEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66C76964-5150-4656-92CD-A739865E0FEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66C76964-5150-4656-92CD-A739865E0FEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

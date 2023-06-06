@@ -3,9 +3,8 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using BetterMVVM;
 using FileManager.Domain.UseCases;
-using FileManager.ui.Commands;
-using FileManager.ui.EventArgs;
 
 namespace FileManager.ui.ViewModels;
 

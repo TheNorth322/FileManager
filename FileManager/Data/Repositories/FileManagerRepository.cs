@@ -2,8 +2,6 @@
 using System.IO;
 using System.Security.AccessControl;
 using FileManager.Domain.Repositories;
-using FileManager.Model.Interfaces;
-using FileManager.Domain.Entities;
 namespace FileManager.Data.Repositories;
 
 public class FileManagerRepository : IFileManagerRepository
@@ -13,7 +11,7 @@ public class FileManagerRepository : IFileManagerRepository
 
     protected FileManagerRepository()
     {
-        _fileManager = new Domain.Entities.FileManager();
+        _fileManager = new FileManager();
     }
     
     public static IFileManagerRepository GetInstance()

@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Security.AccessControl;
 
-namespace FileManager.Model.Interfaces;
+namespace FileManager;
 
 public interface IFileManager
 {

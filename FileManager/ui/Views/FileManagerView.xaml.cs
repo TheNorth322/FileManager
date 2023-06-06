@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using FileManager.ui.EventArgs;
+using BetterMVVM;
 using FileManager.ui.ViewModels;
 
 namespace FileManager.ui.Views

@@ -3,9 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Security.AccessControl;
 using System.Security.Principal;
-using FileManager.Model.Interfaces;
 
-namespace FileManager.Domain.Entities;
+namespace FileManager;
 
 public class FileManager : IFileManager
 {
@@ -119,6 +118,11 @@ public class FileManager : IFileManager
 
     public void OpenFile(string path)
     {
-        Process.Start(path);
+        Process p = new Process();
+        p.StartInfo = new ProcessStartInfo(path)
+        {
+            UseShellExecute = true
+        };
+        p.Start();
     }
 }

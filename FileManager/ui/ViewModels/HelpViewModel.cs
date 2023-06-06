@@ -1,6 +1,6 @@
 ﻿using System;
+using BetterMVVM;
 using FileManager.Domain.UseCases;
-using FileManager.ui.Commands;
 
 namespace FileManager.ui.ViewModels;
 
