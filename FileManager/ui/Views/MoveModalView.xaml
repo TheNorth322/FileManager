@@ -7,8 +7,38 @@
              xmlns:viewModels="clr-namespace:FileManager.ui.ViewModels"
              d:DataContext="{d:DesignInstance Type=viewModels:MoveViewModel}"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
+             d:DesignHeight="400" d:DesignWidth="400">
+    <Grid Width="400" Height="400" Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="6*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <Button Grid.Row="0" Content="X" Margin="20" VerticalAlignment="Top" HorizontalAlignment="Right" Padding="10 5"
+                Command="{Binding CloseModalCommand}" />
+        
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
 
+            <TextBlock Grid.Row="0" Text="Enter new path" HorizontalAlignment="Center"
+                       VerticalAlignment="Center" FontSize="20" TextWrapping="Wrap" />
+            
+            <TextBox Grid.Row="1"
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Center"
+                     HorizontalContentAlignment="Center"
+                     VerticalContentAlignment="Center"
+                     Width="300"
+                     Height="30"
+                     Text="{Binding NewPath}" />
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Button Content="Copy" Command="{Binding MoveFileCommand}" />
+        </Grid>
     </Grid>
 </UserControl>

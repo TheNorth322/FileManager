@@ -35,52 +35,56 @@
             <views:QuitModalView />
         </DataTemplate>
     </Window.Resources>
-    <Grid Margin="10">
+    <Grid>
         <custom:Modal Panel.ZIndex="10" x:Name="modal" Content="{Binding CurrentModalViewModel}">
             <custom:Modal.Background>
                 <SolidColorBrush Color="Black" Opacity="0.3" />
             </custom:Modal.Background>
         </custom:Modal>
+        <Grid Margin="10">
 
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="8*" />
-                <RowDefinition Height="1*" />
-                <RowDefinition Height="1*" />
-            </Grid.RowDefinitions>
-            <!-- File Managers-->
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="8*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+                <!-- File Managers-->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
 
-                <!-- Left File Manager-->
-                <components:FileExplorer Content="{Binding LeftExplorerViewModel}" />
-                <!-- Right File Manager-->
-                <components:FileExplorer Grid.Column="1" Content="{Binding RightExplorerViewModel}" />
-            </Grid>
+                    <!-- Left File Manager-->
+                    <components:FileExplorer Content="{Binding LeftExplorerViewModel}" />
+                    <!-- Right File Manager-->
+                    <components:FileExplorer Grid.Column="1" Content="{Binding RightExplorerViewModel}" />
+                </Grid>
 
-            <!--PathTextBox-->
-            <TextBox Grid.Row="1" Margin="0 10 0 0" VerticalContentAlignment="Center" Text="{Binding CurrentPath}" />
+                <!--PathTextBox-->
+                <TextBox Grid.Row="1" Margin="0 10 0 0" VerticalContentAlignment="Center" Text="{Binding CurrentPath}" />
 
-            <Grid Grid.Row="2" Margin="0 10 0 0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
+                <Grid Grid.Row="2" Margin="0 10 0 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Command="{Binding ShowHelpModalCommand}" Content="Help" />
-                <Button Grid.Column="1" Margin="10 0 0 0" Command="{Binding ShowCopyModalCommand}" Content="Copy" />
-                <Button Grid.Column="2" Margin="10 0 0 0" Command="{Binding ShowMoveModalCommand}" Content="RenMove" />
-                <Button Grid.Column="3" Margin="10 0 0 0" Command="{Binding ShowMakeFolderModalCommand}"
-                        Content="MkFold" />
-                <Button Grid.Column="4" Margin="10 0 0 0" Command="{Binding ShowDeleteModalCommand}" Content="Delete" />
-                <Button Grid.Column="5" Margin="10 0 0 0" Command="{Binding ShowQuitModalCommand}" Content="Quit" />
+                    <Button Grid.Column="0" Command="{Binding ShowHelpModalCommand}" Content="Help" />
+                    <Button Grid.Column="1" Margin="10 0 0 0" Command="{Binding ShowCopyModalCommand}" Content="Copy" />
+                    <Button Grid.Column="2" Margin="10 0 0 0" Command="{Binding ShowMoveModalCommand}"
+                            Content="RenMove" />
+                    <Button Grid.Column="3" Margin="10 0 0 0" Command="{Binding ShowMakeFolderModalCommand}"
+                            Content="MkFold" />
+                    <Button Grid.Column="4" Margin="10 0 0 0" Command="{Binding ShowDeleteModalCommand}"
+                            Content="Delete" />
+                    <Button Grid.Column="5" Margin="10 0 0 0" Command="{Binding ShowQuitModalCommand}" Content="Quit" />
+                </Grid>
             </Grid>
         </Grid>
     </Grid>

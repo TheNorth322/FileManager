@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FileManager.ui.EventArgs;
 using FileManager.ui.ViewModels;
 
 namespace FileManager.ui.Views
@@ -28,6 +29,7 @@ namespace FileManager.ui.Views
             this.DataContext = vm;
             (this.DataContext as FileManagerViewModel).OpenModal += OnOpenModal;
             (this.DataContext as FileManagerViewModel).CloseModal += OnCloseModal;
+            (this.DataContext as ViewModelBase).MessageBoxRequest += OnMessageBoxRequest;
         }
 
         private void OnOpenModal()
@@ -38,6 +40,11 @@ namespace FileManager.ui.Views
         private void OnCloseModal()
         {
             modal.IsOpen = false;
+        }
+
+        private void OnMessageBoxRequest(object sender, MessageBoxEventArgs e)
+        {
+            e.Show();     
         }
     }
 }

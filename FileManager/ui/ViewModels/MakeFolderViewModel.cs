@@ -54,10 +54,18 @@ public class MakeFolderViewModel : ViewModelBase
 
     private void CreateDirectory()
     {
-        _fileManagerInteractor.CreateDirectory(_absolutePath + $"\\{DirectoryName}");
-        OnCloseModalAction();
-        ExplorerContentChanged?.Invoke();        
+        try
+        {
+            _fileManagerInteractor.CreateDirectory(_absolutePath + $"\\{DirectoryName}");
+            OnCloseModalAction();
+            ExplorerContentChanged?.Invoke();
+        }
+        catch (Exception ex)
+        {
+            ExceptionEvent?.Invoke(this, ex.Message);
+        }
     }
-    
+
+    public EventHandler<string> ExceptionEvent { get; set; }
     public Action ExplorerContentChanged { get; set; }
 }

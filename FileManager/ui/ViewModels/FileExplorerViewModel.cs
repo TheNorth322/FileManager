@@ -2,8 +2,10 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using FileManager.Domain.UseCases;
 using FileManager.ui.Commands;
+using FileManager.ui.EventArgs;
 
 namespace FileManager.ui.ViewModels;
 
@@ -41,9 +43,8 @@ public class FileExplorerViewModel : ViewModelBase
         set
         {
             _currentPath = value;
-            _absolutePath = DeleteLastName(_currentPath);
             OnPropertyChange(nameof(_currentPath));
-            CurrentPathChanged?.Invoke(this, System.EventArgs.Empty);
+            CurrentPathChanged?.Invoke(this, CurrentPath);
         }
     }
 
@@ -52,9 +53,9 @@ public class FileExplorerViewModel : ViewModelBase
         get { return _selectedFileViewModel; }
         set
         {
+            if (value == null) return;
             _selectedFileViewModel = value;
-            CurrentPath = _selectedFileViewModel.FullPath;
-            _absolutePath = DeleteLastName(CurrentPath);
+            CurrentPath = _selectedFileViewModel?.FullPath;
             OnPropertyChange(nameof(SelectedFileViewModel));
         }
     }
@@ -76,23 +77,42 @@ public class FileExplorerViewModel : ViewModelBase
     {
         if (SelectedFileViewModel.FileName == _goBack)
         {
-            if (CurrentPath.Length == 3)
+            try
             {
-                GetDisks();
+                if (CurrentPath.Length == 3)
+                {
+                    GetDisks();
+                    return;
+                }
+
+                _absolutePath = DeleteLastName(_absolutePath);
+                UpdateFileManagerContents(_absolutePath);
                 return;
             }
-
-            CurrentPath = DeleteLastName(CurrentPath);
-            UpdateFileManagerContents(CurrentPath);
-            return;
+            catch (Exception ex)
+            {
+                MessageBoxRequest?.Invoke(this, ex.Message);
+            }
         }
 
-        FileAttributes attr = File.GetAttributes(SelectedFileViewModel.FullPath);
+        try
+        {
+            FileAttributes attr = File.GetAttributes(SelectedFileViewModel.FullPath);
 
-        if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
-            UpdateFileManagerContents(CurrentPath);
-        else
-            _fileManagerInteractor.OpenFile(SelectedFileViewModel.FullPath);
+            if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+            {
+                UpdateFileManagerContents(CurrentPath);
+                _absolutePath = CurrentPath;
+            }
+            else
+            {
+                _fileManagerInteractor.OpenFile(SelectedFileViewModel.FullPath);
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBoxRequest?.Invoke(this, ex.Message);
+        }
     }
 
     public void UpdateFileManagerContents(string path)
@@ -133,6 +153,9 @@ public class FileExplorerViewModel : ViewModelBase
 
     private string DeleteLastName(string path)
     {
+        if (String.IsNullOrEmpty(path))
+            return "";
+
         for (int i = path.Length - 1; i >= 0; i--)
         {
             if (path[i] == '\\')
@@ -142,5 +165,6 @@ public class FileExplorerViewModel : ViewModelBase
         return path;
     }
 
-    public EventHandler CurrentPathChanged { get; set; }
+    public EventHandler<string> CurrentPathChanged { get; set; }
+    public EventHandler<string> MessageBoxRequest { get; set; }
 }

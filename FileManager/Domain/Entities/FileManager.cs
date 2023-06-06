@@ -15,7 +15,6 @@ public class FileManager : IFileManager
         File.Move(old_path, new_path);
     }
 
-    // TODO
     public string[] GetDirectoryContents(string path)
     {
         CheckDirectoryExist(path);

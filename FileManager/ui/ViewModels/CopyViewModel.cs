@@ -46,9 +46,16 @@ public class CopyViewModel : ViewModelBase
 
     private void CopyFile()
     {
-        _fileManagerInteractor.CopyFile(_oldPath, _newPath + $"\\{GetFileName(_oldPath)}");
-        OnCloseModalAction();
-        ExplorerContentChanged?.Invoke();
+        try
+        {
+            _fileManagerInteractor.CopyFile(_oldPath, _newPath + $"\\{GetFileName(_oldPath)}");
+            OnCloseModalAction();
+            ExplorerContentChanged?.Invoke();
+        }
+        catch (Exception ex)
+        {
+            ExceptionEvent?.Invoke(this, ex.Message);     
+        }
     }
 
     private string GetFileName(string path)
@@ -74,4 +81,5 @@ public class CopyViewModel : ViewModelBase
     }
 
     public Action ExplorerContentChanged { get; set; }
+    public EventHandler<string> ExceptionEvent { get; set; }
 }

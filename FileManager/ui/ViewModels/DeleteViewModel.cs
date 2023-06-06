@@ -38,10 +38,18 @@ public class DeleteViewModel : ViewModelBase
 
     private void DeleteFile()
     {
-        _fileManagerInteractor.RemoveFile(CurrentPath);
-        ExplorerContentChanged?.Invoke();
-        OnCloseModalAction();
+        try
+        {
+            _fileManagerInteractor.RemoveFile(CurrentPath);
+            ExplorerContentChanged?.Invoke();
+            OnCloseModalAction();
+        }
+        catch (Exception ex)
+        {
+            ExceptionEvent?.Invoke(this, ex.Message);  
+        }
     }
     
+    public EventHandler<string> ExceptionEvent { get; set; }
     public Action ExplorerContentChanged { get; set; }
 }
